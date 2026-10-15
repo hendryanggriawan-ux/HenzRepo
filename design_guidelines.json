@@ -1,0 +1,101 @@
+{
+  "theme": "light_and_dark",
+  "archetype": "THE PERFORMANCE PRO / TACTICAL MINIMALISM",
+  "typography": {
+    "headings": "Chivo",
+    "body": "IBM Plex Sans",
+    "monospace": "JetBrains Mono",
+    "packages_to_install": [
+      "@fontsource/chivo",
+      "@fontsource/ibm-plex-sans",
+      "@fontsource/jetbrains-mono"
+    ],
+    "rules": [
+      "Headings (H1-H3) MUST use Chivo with uppercase/tracking-tight for dashboard sections to give a strong, tactical feel.",
+      "Body text MUST use IBM Plex Sans for maximum legibility of dense numbers and tabular data.",
+      "Thermal receipts and barcodes MUST use JetBrains Mono.",
+      "Hierarchy Gap Rule: Ensure contrast in font weights, use font-black for numbers, font-medium for labels."
+    ]
+  },
+  "colors": {
+    "light": {
+      "background": "0 0% 98%", 
+      "foreground": "222.2 84% 4.9%",
+      "primary": "24.6 95% 53.1%", 
+      "primary_foreground": "60 9.1% 97.8%",
+      "card": "0 0% 100%",
+      "card_foreground": "222.2 84% 4.9%",
+      "border": "214.3 31.8% 91.4%",
+      "muted": "210 40% 96.1%",
+      "muted_foreground": "215.4 16.3% 46.9%"
+    },
+    "dark": {
+      "background": "222.2 84% 4.9%",
+      "foreground": "210 40% 98%",
+      "primary": "24.6 95% 53.1%",
+      "primary_foreground": "222.2 47.4% 11.2%",
+      "card": "222.2 84% 4.9%",
+      "card_foreground": "210 40% 98%",
+      "border": "217.2 32.6% 17.5%",
+      "muted": "217.2 32.6% 17.5%",
+      "muted_foreground": "215 20.2% 65.1%"
+    },
+    "rules": [
+      "Use 'Industrial Orange' (HSL: 24.6 95% 53.1%) as the primary action color (checkout, save, print).",
+      "Avoid 'SaaS Blue' or 'Teal'. Stick to Slate Greys and Orange to reflect the Garage/Automotive vibe.",
+      "Interactive states MUST have explicit hover and focus rings with high contrast.",
+      "Tint greys slightly blue (Slate) to make the UI look crisp and technical."
+    ]
+  },
+  "visual_enhancers": {
+    "surfaces": "Use 'Neumorphism (Tactile Variant)' for quick-action buttons in POS. Use 'Grid Borders (Technical)' for data-dense tables.",
+    "borders": "1px crisp borders (border-border) for all table cells and cards to delineate data clearly.",
+    "shadows": "Minimal shadows. Rely on 1px borders for structure to keep the interface fast and functional.",
+    "icons_library": "@phosphor-icons/react (Duotone or Regular weight). Best for dense data tools and garages."
+  },
+  "component_patterns": {
+    "navigation": "Sidebar for Owner/Admin with fixed width. Top navigation or minimal sidenav for Kasir (to maximize screen space for POS cart).",
+    "pos_cart": "High-density layout. Left side: Barcode scanner input, product search, received vehicles list. Right side: Current order cart, calculations, and massive Checkout button.",
+    "tables": "Use Shadcn Table. Dense padding (p-2 or p-3). Zebra striping (bg-muted/50 on even rows) is RECOMMENDED for offline long reading.",
+    "modals": "Use Shadcn Dialog for checkout process (Tunai, QRIS, Debit, Credit, Transfer selection) and receipt preview.",
+    "receipt": "A specialized hidden component that only appears during window.print() (via @media print)."
+  },
+  "grids_and_layouts": {
+    "bento_grid": "MODE B: High Density Grid. Used for the Owner Dashboard (Today's Sales, Active Services, Low Stock Alerts).",
+    "spacing": "Generous spacing in Dashboard (p-6, p-8). Tight spacing in POS Kasir interface (p-2, p-4) to fit more items.",
+    "alignment": "Numbers and prices MUST always be right-aligned in tables and receipts."
+  },
+  "motion": {
+    "micro_interactions": "Snappy, fast transitions (0.15s ease). A cashier uses this daily, slow animations will frustrate them.",
+    "toast": "Use `sonner` for quick success/error notifications (e.g., 'Item added', 'Stock low').",
+    "accessibility": "Respect prefers-reduced-motion."
+  },
+  "accessibility": {
+    "contrast": "Ensure APCA/WCAG AA minimum 4.5:1 for standard text. Especially critical for offline garages which may have poor lighting or dirty screens.",
+    "keyboard": "CRITICAL: POS system must be keyboard-navigable. Barcode scanner acts as keyboard (sends barcode + Enter). Input fields must auto-focus where appropriate."
+  },
+  "media": {
+    "image_urls": {
+      "login_background": {
+        "url": "https://images.unsplash.com/photo-1778276610024-94135c9e55e3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxtb3RvcmN5Y2xlJTIwcmVwYWlyJTIwc2hvcCUyMGdhcmFnZXxlbnwwfHx8fDE3OTIwMzY5Njd8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Red sport bike in garage. Use as a split-screen or full-background with heavy dark overlay (bg-slate-950/80) for the Login page."
+      }
+    }
+  },
+  "instructions_to_main_agent": {
+    "architecture": "React frontend, Tailwind, Shadcn UI. FastApi + MongoDB backend (offline local network deploy).",
+    "barcode_handling": "Install `react-barcode` or use `bwip-js` for generating barcode labels for items. Listen for 'Enter' keypress in search inputs to handle physical barcode scanner input automatically.",
+    "thermal_printing": "Create a specific CSS class `.print-only` visible only in `@media print`. Hide `.no-print`. Define `@page { margin: 0; }`. Provide toggle in Settings for paper width (58mm ~ 219px, 80mm ~ 302px).",
+    "whatsapp_reminder": "Construct links like: `https://wa.me/{phone}?text={encoded_message}`. Replace variables from Settings template.",
+    "state_management": "Use React Context or Zustand for the active POS cart and Kasir session.",
+    "font_installation": "Install font packages via yarn (`yarn add @fontsource/chivo @fontsource/ibm-plex-sans @fontsource/jetbrains-mono`) and import them in `index.js` or `App.js` to ensure they work OFFLINE.",
+    "icons": "Install `yarn add @phosphor-icons/react`.",
+    "components": "Use `sonner` for toasts. Do NOT use standard `window.alert`. Provide fallback offline placeholders if any remote assets fail."
+  },
+  "universal_guidelines": {
+    "testing": "All interactive and key informational elements MUST include a `data-testid` attribute (e.g., `data-testid='btn-checkout'`).",
+    "anti_slop": "Do not make generic centered layouts. Align forms left. Create depth with z-index and 1px borders instead of massive fuzzy shadows.",
+    "transparency": "CRITICAL: DO NOT use complete `transparent` background in header, overlays, dropdowns. Use solid backgrounds (bg-card) to avoid text collision.",
+    "design_language": "This is a B2B tactical application for a motorcycle garage (bengkel). It must look sturdy, data-rich, and fast."
+  }
+}

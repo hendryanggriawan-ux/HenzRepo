@@ -1,0 +1,27 @@
+{
+  "summary": "First full regression. Backend: 29 pytest cases covering auth (login owner/kasir, email login, 429 lockout), role access (403 on reports/settings/items/users for kasir, cannot cancel WO, cannot PUT WO), items (seed, auto 12-digit barcode starting '2', duplicate code 400), settings GET/PUT + /public, sales (tunai with change, insufficient cash 400, over-stock 400, stock decrement verified via GET), work-orders (create, duplicate active plate 400, kasir add parts ok, cancel owner-only, cancelled cannot be edited), WO pay (service sale, vehicle next_service_date persisted, stock taken), purchases (stock+buy_price updated), all /reports/* endpoints, reminders list, users CRUD + cannot-delete-self, stock adjust in/out w/ exceed guard. ALL 29 PASS. Frontend: owner login lands on dashboard with all nav visible; kasir login redirects to /kasir; kasir does not see owner nav items; /pengaturan from kasir redirects to /kasir; part-sale flow via barcode scan (200000000001 + Enter) adds to cart, tunai payment shows 'Rp 2.000' change, receipt dialog with number TRX-... and preview iframe render; Penerimaan form fields render (plate/customer/mechanic); Barang page lists seeds; Pembelian supplier select; all laporan routes reachable; Reminder page WA anchor href begins 'https://wa.me/6281200000000?text=...' using settings template; kasir service tab + search input present.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dashboard", "issues": ["Recharts initial render warning 'width(-1) and height(-1)' before container measured; cosmetic only, chart renders correctly after layout."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/backend/tests/conftest.py", "/app/test_reports/pytest/results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py uses deprecated @app.on_event('startup')/@app.on_event('shutdown') - should migrate to lifespan context manager (FastAPI deprecated these; still works).",
+    "CORS_ORIGINS='*' with allow_credentials=False - fine for current token-in-localStorage model, but if ever switching to cookie auth this must be tightened.",
+    "resolve_lines concurrency: take_stock uses atomic $inc guard which is good, but WO parts path checks stock in resolve_lines separately from the final take_stock in /pay - a user could oversell if stock drops between create and pay; current atomic $inc still protects at pay time (returns 400). Acceptable.",
+    "routes_trx.add_wo_parts price_mode='sell' re-uses sell_price for each add; existing added_at/added_by only applied on new lines (good).",
+    "login_attempts never TTL-cleaned; consider adding TTL index to avoid long-term growth."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py", "/app/backend/tests/conftest.py"],
+  "success_rate": {"backend": "100% (29/29)", "frontend": "100% of smoke-tested flows"},
+  "test_credentials": "owner / Bengkel#2026 ; kasir / kasir123 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Tests create TEST_-prefixed users, items, purchases, work orders (plates 'TEST xxxx xx'). Several work orders and sales were produced; dashboard today's sales now reflects them (expected).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression suite at /app/backend/tests/backend_test.py (pytest, parallel-safe, uses REACT_APP_BACKEND_URL). All features in review request work end-to-end. For UI, data-testid coverage is excellent across sidebar/nav/pos/wo/payment/receipt. Camera scan not tested (headless). WA print flows just verify button presence."
+}
